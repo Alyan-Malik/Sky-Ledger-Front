@@ -7,6 +7,8 @@ export interface Booking {
   booking_id: string;
   pnr_number: string | null;
   eticket_number: string | null;
+  place_of_issue: string | null;
+  iata_code: string | null;
   
   passenger: {
     first_name: string;
@@ -44,6 +46,7 @@ export interface Booking {
   baggage?: {
     checked_count: number;
     hand_luggage_count: number;
+    checked_weight: number;
   };
   
   assistance?: {
@@ -56,6 +59,7 @@ export interface Booking {
       name: string;
       code?: string;
       logo?: string | null;
+      iata_code?: string | null;
     };
     flight?: {
       number: string;

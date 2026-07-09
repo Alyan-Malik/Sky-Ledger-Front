@@ -17,7 +17,7 @@ const nav = [
   { label: "Dashboard", to: "/dashboard", icon: LayoutDashboard, exact: true },
   { label: "Search Flights", to: "/dashboard/search", icon: CalendarSearch, exact: false },
   { label: "Bookings", to: "/dashboard/bookings", icon: ListChecks, exact: false },
-    { label: "Tickets", to: "/dashboard/ticket", icon: ListChecks, exact: false },
+    { label: "Tickets", to: "/dashboard/ticket", icon: Printer, exact: false },
   { label: "Profile", to: "/dashboard/profile", icon: User, exact: false },
 ] as any[]; // Removed 'as const' to safely allow conditional parameters matching layout engines smoothly
 
