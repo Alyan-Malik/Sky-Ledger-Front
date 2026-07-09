@@ -398,12 +398,26 @@ function TicketPage() {
                       <td className="py-2 pr-2 align-top font-mono">
                         <span className="font-bold text-gray-900">{formatFlightDate(flight?.schedule?.departure)}</span>
                         <br />
-                        <span className="text-gray-700">{formatFlightTime(flight?.schedule?.departure)}</span>
+                        <span className="text-gray-700 font-semibold font-mono">
+  {(() => {
+    const rawTime = String(formatFlightTime(flight?.schedule?.departure) || '');
+    return rawTime.length === 4 
+      ? `${rawTime.substring(0, 2)}:${rawTime.substring(2)}` 
+      : rawTime;
+  })()}
+</span>
                         <br />
                         <br />
                         <span className="font-bold text-gray-900">{formatFlightDate(flight?.schedule?.arrival)}</span>
                         <br />
-                        <span className="text-gray-700">{formatFlightTime(flight?.schedule?.arrival)}</span>
+                      <span className="text-gray-700 font-semibold font-mono">
+  {(() => {
+    const rawTime = String(formatFlightTime(flight?.schedule?.arrival) || '');
+    return rawTime.length === 4 
+      ? `${rawTime.substring(0, 2)}:${rawTime.substring(2)}` 
+      : rawTime;
+  })()}
+</span>
                       </td>
                       <td className="py-2 pr-2 align-top">
                         <span className="font-bold text-gray-900">{flight?.route?.origin?.iata || '???'}</span>
@@ -423,7 +437,14 @@ function TicketPage() {
                       <td className="py-2 pr-2 align-top font-mono">
                         <span className="text-gray-900">{getCheckInOpens(flight?.schedule?.departure).date}</span>
                         <br />
-                        <span className="text-gray-700">{getCheckInOpens(flight?.schedule?.departure).time}</span>
+                        <span className="text-gray-700 font-semibold font-mono">
+  {(() => {
+    const rawTime = String(getCheckInOpens(flight?.schedule?.departure).time || '');
+    return rawTime.length === 4 
+      ? `${rawTime.substring(0, 2)}:${rawTime.substring(2)}` 
+      : rawTime;
+  })()}
+</span>
                       </td>
                       <td className="py-2 pr-2 align-top">
                         <span className="font-bold text-gray-900 uppercase">{flight?.flight?.cabin_class || 'ECONOMY'}</span>
@@ -477,12 +498,26 @@ function TicketPage() {
                       <td className="py-2 pr-2 align-top font-mono">
                         <span className="font-bold text-gray-900">{formatFlightDate(returnFlightData.departure_time)}</span>
                         <br />
-                        <span className="text-gray-700">{formatFlightTime(returnFlightData.departure_time)}</span>
+                        <span className="text-gray-700 font-semibold font-mono">
+  {(() => {
+    const rawTime = String(formatFlightTime(returnFlightData.departure_time) || '');
+    return rawTime.length === 4 
+      ? `${rawTime.substring(0, 2)}:${rawTime.substring(2)}` 
+      : rawTime;
+  })()}
+</span>
                         <br />
                         <br />
                         <span className="font-bold text-gray-900">{formatFlightDate(returnFlightData.arrival_time)}</span>
                         <br />
-                        <span className="text-gray-700">{formatFlightTime(returnFlightData.arrival_time)}</span>
+                        <span className="text-gray-700 font-semibold font-mono">
+  {(() => {
+    const rawTime = String(formatFlightTime(returnFlightData.arrival_time) || '');
+    return rawTime.length === 4 
+      ? `${rawTime.substring(0, 2)}:${rawTime.substring(2)}` 
+      : rawTime;
+  })()}
+</span>
                       </td>
                       <td className="py-2 pr-2 align-top">
                         <span className="font-bold text-gray-900">{returnFlightData.origin?.iata || '???'}</span>
@@ -502,7 +537,14 @@ function TicketPage() {
                       <td className="py-2 pr-2 align-top font-mono">
                         <span className="text-gray-900">{getCheckInOpens(returnFlightData.departure_time).date}</span>
                         <br />
-                        <span className="text-gray-700">{getCheckInOpens(returnFlightData.departure_time).time}</span>
+                        <span className="text-gray-700 font-semibold font-mono">
+  {(() => {
+    const rawTime = String(getCheckInOpens(returnFlightData.departure_time).time || '');
+    return rawTime.length === 4 
+      ? `${rawTime.substring(0, 2)}:${rawTime.substring(2)}` 
+      : rawTime;
+  })()}
+</span>
                       </td>
                       <td className="py-2 pr-2 align-top">
                         <span className="font-bold text-gray-900 uppercase">{flight?.flight?.cabin_class || 'ECONOMY'}</span>
