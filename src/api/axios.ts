@@ -1,7 +1,7 @@
 import axios, { AxiosInstance } from 'axios';
 
 // Constants
-const BASE_API_URL = import.meta.env.VITE_API_URL ?? 'http://skyledger-flight.test';
+const BASE_API_URL = import.meta.env.VITE_API_URL ?? 'https://trip.shiningerp.com';
 const AUTH_TOKEN_KEY = 'token';
 const SESSION_ID_KEY = 'session_id';
 
