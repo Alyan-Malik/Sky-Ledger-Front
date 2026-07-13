@@ -1,6 +1,7 @@
 // src/types/airport.ts
 
 export interface Airport {
+  id: number;
   iata: string;
   airport_name: string;
   city: string;

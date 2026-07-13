@@ -264,39 +264,43 @@ const handleSubmit = async (e: React.FormEvent) => {
             {/* Origin & Destination */}
             <div className="grid gap-4 lg:grid-cols-2">
               <div className="relative grid gap-4 sm:grid-cols-2">
-                <AirportSearchInput
-                  label="From"
-                  value={origin}
-                  onChange={(airport) => {
-                    setOrigin(airport);
-                    delete validationErrors.origin;
-                  }}
-                  placeholder="Departure airport..."
-                  error={validationErrors.origin || searchErrors.origin_iata?.[0]}
-                  icon={<PlaneTakeoff className="h-4 w-4" />}
-                />
+  <AirportSearchInput
+    //  The key prop forces React to completely redraw with the swapped DB data
+    key={`origin-${origin?.id || origin?.iata || 'empty'}`}
+    label="From"
+    value={origin}
+    onChange={(airport) => {
+      setOrigin(airport);
+      delete validationErrors.origin;
+    }}
+    placeholder="Departure airport..."
+    error={validationErrors.origin || searchErrors.origin_iata?.[0]}
+    icon={<PlaneTakeoff className="h-4 w-4" />}
+  />
 
-                <AirportSearchInput
-                  label="To"
-                  value={destination}
-                  onChange={(airport) => {
-                    setDestination(airport);
-                    delete validationErrors.destination;
-                  }}
-                  placeholder="Arrival airport..."
-                  error={validationErrors.destination || searchErrors.destination_iata?.[0]}
-                  icon={<PlaneLanding className="h-4 w-4" />}
-                />
+  <AirportSearchInput
+    // The key prop forces React to completely redraw with the swapped DB data
+    key={`dest-${destination?.id || destination?.iata || 'empty'}`}
+    label="To"
+    value={destination}
+    onChange={(airport) => {
+      setDestination(airport);
+      delete validationErrors.destination;
+    }}
+    placeholder="Arrival airport..."
+    error={validationErrors.destination || searchErrors.destination_iata?.[0]}
+    icon={<PlaneLanding className="h-4 w-4" />}
+  />
 
-                <button
-                  type="button"
-                  onClick={swap}
-                  className="absolute left-1/2 top-[2.35rem] hidden h-9 w-9 -translate-x-1/2 place-items-center rounded-full border border-slate-200 bg-white text-primary shadow-md transition-transform hover:rotate-180 sm:grid active:scale-95"
-                  aria-label="Swap origin and destination"
-                >
-                  <ArrowLeftRight className="h-4 w-4" />
-                </button>
-              </div>
+  <button
+    type="button"
+    onClick={swap}
+    className="absolute left-1/2 -translate-x-1/2 grid h-9 w-9 place-items-center rounded-full border border-slate-200 bg-white text-primary shadow-md transition-all hover:rotate-180 active:scale-95 z-20 top-[4.2rem] sm:top-[2.35rem]"
+    aria-label="Swap origin and destination"
+  >
+    <ArrowLeftRight className="h-4 w-4 rotate-90 sm:rotate-0" />
+  </button>
+</div>
 
               {/* Dates */}
               <div className="grid gap-4 sm:grid-cols-2">
@@ -451,23 +455,37 @@ const handleSubmit = async (e: React.FormEvent) => {
 
       {/* Popular Routes */}
       <div className="mt-8">
-        <h2 className="text-sm font-semibold text-slate-700">Popular routes from Karachi</h2>
-        <div className="mt-3 flex flex-wrap gap-2">
-          {popularRoutes.map((route) => (
-            <button
-              key={route.iata}
-              type="button"
-              onClick={() => {
-                setDestination(route);
-                delete validationErrors.destination;
-              }}
-              className="rounded-full border border-slate-200 bg-white px-4 py-2 text-sm text-slate-500 transition-all hover:border-primary hover:text-primary hover:shadow-sm"
-            >
-              Karachi → {route.city} ({route.iata})
-            </button>
-          ))}
-        </div>
-      </div>
+  <h2 className="text-sm font-semibold text-slate-700">Popular routes from Karachi</h2>
+  <div className="mt-3 flex flex-wrap gap-2">
+    {popularRoutes.map((route, index) => (
+      <button
+        key={route.iata}
+        type="button"
+        onClick={() => {
+          // 1. Force combine the missing ID and rename airport_name to name
+          const mappedAirport = {
+            ...route,
+            id: index + 9999, // Fills the missing required 'id' property
+            name: route.airport_name, // Map it in case your Airport type expects 'name'
+          };
+
+          // 2. Double-cast to break the readonly literal restriction
+          setDestination(mappedAirport as unknown as Airport);
+
+          // 3. Clear errors safely
+          if (validationErrors.destination) {
+            const updatedErrors = { ...validationErrors };
+            delete updatedErrors.destination;
+            setValidationErrors(updatedErrors);
+          }
+        }}
+        className="rounded-full border border-slate-200 bg-white px-4 py-2 text-sm text-slate-500 transition-all hover:border-primary hover:text-primary hover:shadow-sm"
+      >
+        Karachi → {route.city} ({route.iata})
+      </button>
+    ))}
+  </div>
+</div>
     </>
   );
 }
