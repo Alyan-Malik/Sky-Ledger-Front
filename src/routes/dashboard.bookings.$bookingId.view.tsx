@@ -322,7 +322,7 @@ function BookingDetailPage() {
                   <InfoField label="Street Address" value={address.address || '—'} />
                   <InfoField label="City" value={address.city || '—'} />
                   <InfoField label="Country" value={address.country || '—'} />
-                  <InfoField label="Zip Code" value={address.zip_code || '—'} />
+                  <InfoField label="Post Code" value={address.zip_code || '—'} />
                 </div>
               </div>
             </div>

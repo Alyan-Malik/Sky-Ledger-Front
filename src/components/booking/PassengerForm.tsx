@@ -347,7 +347,7 @@ export const PassengerForm: React.FC<PassengerFormProps> = ({
               className={inputClass}
             />
           </div>
-          <div className="space-y-1.5">
+          {/* <div className="space-y-1.5">
             <Label className={labelClass}>CNIC/ID Number</Label>
             <Input
               placeholder="Enter ID number"
@@ -355,7 +355,7 @@ export const PassengerForm: React.FC<PassengerFormProps> = ({
               onChange={(e) => handleChange('cnic', e.target.value)}
               className={inputClass}
             />
-          </div>
+          </div> */}
         </div>
       </div>
 
@@ -547,9 +547,9 @@ export const PassengerForm: React.FC<PassengerFormProps> = ({
               />
             </div>
             <div className="space-y-1.5">
-              <Label className={labelClass}>Zip Code</Label>
+              <Label className={labelClass}>Post Code</Label>
               <Input
-                placeholder="Zip code"
+                placeholder="Post code"
                 value={formData.zip_code || ''}
                 onChange={(e) => handleChange('zip_code', e.target.value)}
                 className={inputClass}

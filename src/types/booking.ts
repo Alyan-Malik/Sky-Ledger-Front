@@ -86,6 +86,7 @@ export interface Booking {
     // Return flight
     return_flight?: ReturnFlight | null;
     is_round_trip?: boolean;
+    segments?: FlightSegment[];
   };
   
   status: {

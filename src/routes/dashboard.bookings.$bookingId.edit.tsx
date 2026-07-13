@@ -4,7 +4,7 @@ import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useState, useEffect } from "react";
 import { 
   Loader2, AlertTriangle, ArrowLeft, Save, User, Mail, Phone,
-  CreditCard, FileText, Utensils, Luggage, Accessibility, Users, Baby
+  CreditCard, FileText, Utensils, Luggage, Accessibility, Users, MapPin
 } from "lucide-react";
 import { PageHeader } from "@/components/dashboard/PageHeader";
 import { Button } from "@/components/ui/button";
@@ -57,18 +57,18 @@ function EditBookingPage() {
           email: b.contact.email || '',
           phone: b.contact.phone || '',
           emergency_contact: b.contact.emergency_contact || '',
-          address: b.address.address || '',
-          city: b.address.city || '',
-          country: b.address.country || '',
-          zip_code: b.address.zip_code || '',
+          address: b.address?.address || '',
+          city: b.address?.city || '',
+          country: b.address?.country || '',
+          zip_code: b.address?.zip_code || '',
           additional_passengers: b.additional_passengers || [],
           checked_baggage_count: b.baggage?.checked_count || 0,
           hand_luggage_count: b.baggage?.hand_luggage_count || 0,
           wheelchair_required: b.assistance?.wheelchair || 'none',
           priority_pass: b.assistance?.priority_pass || false,
-          seat_number: b.preferences.seat_number || '',
-          meal_preference: b.preferences.meal_preference || '',
-          special_assistance: b.preferences.special_assistance || '',
+          seat_number: b.preferences?.seat_number || '',
+          meal_preference: b.preferences?.meal_preference || '',
+          special_assistance: b.preferences?.special_assistance || '',
           remarks: b.remarks || '',
         });
       }
@@ -109,16 +109,14 @@ function EditBookingPage() {
     try {
       setSaving(true);
       await bookingService.updateBooking(Number(bookingId), formData);
-            toast.success('Booking Updated', {
+      toast.success('Booking Updated', {
         description: 'Booking details updated successfully.',
       });
-
       navigate({ to: '/dashboard/bookings/$bookingId/view', params: { bookingId } });
     } catch (err: any) {
-           toast.error('Update Failed', {
+      toast.error('Update Failed', {
         description: err.response?.data?.message || 'Failed to update booking.',
       });
-
     } finally { setSaving(false); }
   };
 
@@ -139,7 +137,12 @@ function EditBookingPage() {
       <PageHeader
         title="Edit Booking"
         subtitle={`Editing booking ${booking.booking_id}`}
-        crumbs={[{ label: "Dashboard", to: "/dashboard" }, { label: "Bookings", to: "/dashboard/bookings" }, { label: booking.booking_id, to: `/dashboard/bookings/${bookingId}` }, { label: "Edit" }]}
+        crumbs={[
+          { label: "Dashboard", to: "/dashboard" },
+          { label: "Bookings", to: "/dashboard/bookings" },
+          { label: booking.booking_id, to: `/dashboard/bookings/${bookingId}` },
+          { label: "Edit" },
+        ]}
       />
 
       <form onSubmit={handleSubmit} className="space-y-6 max-w-4xl">
@@ -164,7 +167,7 @@ function EditBookingPage() {
             <Field label="Nationality"><Input value={formData.nationality} onChange={e => handleChange('nationality', e.target.value)} className={inputClass} /></Field>
             <Field label="Passport Number"><Input value={formData.passport_number} onChange={e => handleChange('passport_number', e.target.value)} className={inputClass} /></Field>
             <Field label="Passport Expiry"><Input type="date" value={formData.passport_expiry} onChange={e => handleChange('passport_expiry', e.target.value)} className={inputClass} /></Field>
-            <Field label="CNIC/ID"><Input value={formData.cnic} onChange={e => handleChange('cnic', e.target.value)} className={inputClass} /></Field>
+            {/* <Field label="CNIC/ID Number"><Input value={formData.cnic} onChange={e => handleChange('cnic', e.target.value)} className={inputClass} /></Field> */}
           </div>
         </Section>
 
@@ -187,12 +190,38 @@ function EditBookingPage() {
           </Section>
         )}
 
-        {/* Contact */}
+        {/* Contact Information */}
         <Section title="Contact Information" icon={<Phone className="h-5 w-5 text-primary" />}>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <Field label="Email *" error={errors.email}><Input type="email" value={formData.email} onChange={e => handleChange('email', e.target.value)} className={`${inputClass} ${errors.email ? 'border-red-500' : ''}`} /></Field>
             <Field label="Phone *" error={errors.phone}><Input value={formData.phone} onChange={e => handleChange('phone', e.target.value)} className={`${inputClass} ${errors.phone ? 'border-red-500' : ''}`} /></Field>
             <Field label="Emergency Contact"><Input value={formData.emergency_contact} onChange={e => handleChange('emergency_contact', e.target.value)} className={inputClass} /></Field>
+          </div>
+        </Section>
+
+        {/* Address - NEWLY ADDED */}
+        <Section title="Address" icon={<MapPin className="h-5 w-5 text-primary" />}>
+          <div className="space-y-4">
+            <Field label="Street Address">
+              <Textarea 
+                value={formData.address} 
+                onChange={e => handleChange('address', e.target.value)} 
+                className={inputClass} 
+                rows={2}
+                placeholder="Enter street address"
+              />
+            </Field>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <Field label="City">
+                <Input value={formData.city} onChange={e => handleChange('city', e.target.value)} className={inputClass} placeholder="City" />
+              </Field>
+              <Field label="Country">
+                <Input value={formData.country} onChange={e => handleChange('country', e.target.value)} className={inputClass} placeholder="Country" />
+              </Field>
+              <Field label="Post Code">
+                <Input value={formData.zip_code} onChange={e => handleChange('zip_code', e.target.value)} className={inputClass} placeholder="Post code" />
+              </Field>
+            </div>
           </div>
         </Section>
 

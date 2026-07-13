@@ -105,7 +105,7 @@ export const BookingPage: React.FC = () => {
   return (
     <div className="max-w-6xl mx-auto p-6 space-y-6">
       <div>
-        <h1 className="text-2xl font-bold text-slate-900">Complete Your Booking</h1>
+        <h1 className="text-2xl font-bold text-slate-900">Booking</h1>
         <p className="text-slate-500 mt-1">
           Review flight details and enter passenger information 
           ({passengerCounts.adults + passengerCounts.children + passengerCounts.infants} passenger(s))
@@ -119,7 +119,9 @@ export const BookingPage: React.FC = () => {
       <PassengerForm 
         onSubmit={handleSubmit}
         isSubmitting={bookingLoading}
-        onCancel={() => navigate({ to: '/dashboard/results' })}
+        onCancel={() => navigate({ 
+  to: '/dashboard/results' 
+} as any)}
         totalPassengers={passengerCounts}
       />
     </div>
