@@ -118,6 +118,11 @@ export const PassengerForm: React.FC<PassengerFormProps> = ({
     booking_id: '',
     pnr_number: '',
     eticket_number: '',
+    checked_baggage_kg: 23,
+    hand_luggage_kg: 7,
+    seat_preference: '',
+    extra_legroom: false,
+    economy_delight: false, // NEW
   });
 
   const [errors, setErrors] = useState<Record<string, string>>({});
@@ -561,49 +566,96 @@ export const PassengerForm: React.FC<PassengerFormProps> = ({
 
       {/* Baggage */}
       <div className="bg-white rounded-xl border border-slate-200 shadow-sm p-6">
-        <h3 className="text-lg font-semibold text-slate-900 mb-4 flex items-center gap-2">
-          <Luggage className="h-5 w-5 text-primary" />
-          Baggage Allowance
-        </h3>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div className="space-y-1.5">
-            <Label className={labelClass}>Checked Baggage (per passenger)</Label>
-            <Select 
-              value={formData.checked_baggage_count.toString()} 
-              onValueChange={(v) => handleChange('checked_baggage_count', parseInt(v))}
-            >
-              <SelectTrigger className={inputClass}>
-                <SelectValue placeholder="Select" />
-              </SelectTrigger>
-              <SelectContent>
-                {[0, 1, 2, 3, 4, 5].map(n => (
-                  <SelectItem key={n} value={n.toString()}>
-                    {n} {n === 1 ? 'bag' : 'bags'} (23kg each)
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
-          <div className="space-y-1.5">
-            <Label className={labelClass}>Hand Luggage (per passenger)</Label>
-            <Select 
-              value={formData.hand_luggage_count.toString()} 
-              onValueChange={(v) => handleChange('hand_luggage_count', parseInt(v))}
-            >
-              <SelectTrigger className={inputClass}>
-                <SelectValue placeholder="Select" />
-              </SelectTrigger>
-              <SelectContent>
-                {[0, 1, 2].map(n => (
-                  <SelectItem key={n} value={n.toString()}>
-                    {n} {n === 1 ? 'piece' : 'pieces'} (7kg each)
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
+  <h3 className="text-lg font-semibold text-slate-900 mb-4 flex items-center gap-2">
+    <Luggage className="h-5 w-5 text-primary" />
+    Baggage Allowance
+  </h3>
+  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+    {/* Checked Baggage */}
+    <div className="space-y-3">
+      <Label className="text-sm font-semibold text-slate-700">Checked Baggage (per passenger)</Label>
+      <div className="grid grid-cols-2 gap-3">
+        <div className="space-y-1.5">
+          <Label className="text-xs text-slate-500">Pieces</Label>
+          <Select 
+            value={formData.checked_baggage_count?.toString() || '0'} 
+            onValueChange={(v) => handleChange('checked_baggage_count', parseInt(v))}
+          >
+            <SelectTrigger className="h-11 border-slate-200 bg-white">
+              <SelectValue placeholder="Pieces" />
+            </SelectTrigger>
+            <SelectContent>
+              {[0, 1, 2, 3, 4, 5].map(n => (
+                <SelectItem key={n} value={n.toString()}>{n}x</SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+        <div className="space-y-1.5">
+          <Label className="text-xs text-slate-500">Weight</Label>
+          <Select 
+            value={formData.checked_baggage_kg?.toString() || '23'} 
+            onValueChange={(v) => handleChange('checked_baggage_kg', parseInt(v))}
+          >
+            <SelectTrigger className="h-11 border-slate-200 bg-white">
+              <SelectValue placeholder="Weight" />
+            </SelectTrigger>
+            <SelectContent>
+              {[15, 20, 23, 25, 30, 35, 40].map(n => (
+                <SelectItem key={n} value={n.toString()}>{n}kg</SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
         </div>
       </div>
+      <p className="text-[10px] text-slate-400">
+        {formData.checked_baggage_count || 0}x{formData.checked_baggage_kg || 23}kg = {(formData.checked_baggage_count || 0) * (formData.checked_baggage_kg || 23)}kg total
+      </p>
+    </div>
+
+    {/* Hand Luggage */}
+    <div className="space-y-3">
+      <Label className="text-sm font-semibold text-slate-700">Hand Luggage (per passenger)</Label>
+      <div className="grid grid-cols-2 gap-3">
+        <div className="space-y-1.5">
+          <Label className="text-xs text-slate-500">Pieces</Label>
+          <Select 
+            value={formData.hand_luggage_count?.toString() || '0'} 
+            onValueChange={(v) => handleChange('hand_luggage_count', parseInt(v))}
+          >
+            <SelectTrigger className="h-11 border-slate-200 bg-white">
+              <SelectValue placeholder="Pieces" />
+            </SelectTrigger>
+            <SelectContent>
+              {[0, 1, 2].map(n => (
+                <SelectItem key={n} value={n.toString()}>{n}x</SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+        <div className="space-y-1.5">
+          <Label className="text-xs text-slate-500">Weight</Label>
+          <Select 
+            value={formData.hand_luggage_kg?.toString() || '7'} 
+            onValueChange={(v) => handleChange('hand_luggage_kg', parseInt(v))}
+          >
+            <SelectTrigger className="h-11 border-slate-200 bg-white">
+              <SelectValue placeholder="Weight" />
+            </SelectTrigger>
+            <SelectContent>
+              {[5, 7, 8, 10].map(n => (
+                <SelectItem key={n} value={n.toString()}>{n}kg</SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+      </div>
+      <p className="text-[10px] text-slate-400">
+        {formData.hand_luggage_count || 0}x{formData.hand_luggage_kg || 7}kg = {(formData.hand_luggage_count || 0) * (formData.hand_luggage_kg || 7)}kg total
+      </p>
+    </div>
+  </div>
+</div>
 
       {/* Accessibility */}
       <div className="bg-white rounded-xl border border-slate-200 shadow-sm p-6">
@@ -645,53 +697,112 @@ export const PassengerForm: React.FC<PassengerFormProps> = ({
       </div>
 
       {/* Preferences */}
-      <div className="bg-white rounded-xl border border-slate-200 shadow-sm p-6">
-        <h3 className="text-lg font-semibold text-slate-900 mb-4 flex items-center gap-2">
-          <Utensils className="h-5 w-5 text-primary" />
-          Flight Preferences
-        </h3>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div className="space-y-1.5">
-            <Label className={labelClass}>Seat Number</Label>
-            <Input
-              placeholder="e.g., 12A"
-              value={formData.seat_number || ''}
-              onChange={(e) => handleChange('seat_number', e.target.value)}
-              className={inputClass}
-            />
-          </div>
-          <div className="space-y-1.5">
-            <Label className={labelClass}>Meal Preference</Label>
-            <Select 
-              value={formData.meal_preference || ''} 
-              onValueChange={(v) => handleChange('meal_preference', v)}
-            >
-              <SelectTrigger className={inputClass}>
-                <SelectValue placeholder="Select meal" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="regular">Regular</SelectItem>
-                <SelectItem value="vegetarian">Vegetarian</SelectItem>
-                <SelectItem value="vegan">Vegan</SelectItem>
-                <SelectItem value="halal">Halal</SelectItem>
-                <SelectItem value="kosher">Kosher</SelectItem>
-                <SelectItem value="gluten_free">Gluten Free</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-          <div className="md:col-span-2 space-y-1.5">
-            <Label className={labelClass}>Special Assistance Details</Label>
-            <Textarea
-              placeholder="Describe any special assistance needed..."
-              value={formData.special_assistance || ''}
-              onChange={(e) => handleChange('special_assistance', e.target.value)}
-              className={inputClass}
-              rows={2}
-            />
-          </div>
-        </div>
-      </div>
+    <div className="bg-white rounded-xl border border-slate-200 shadow-sm p-6">
+  <h3 className="text-lg font-semibold text-slate-900 mb-4 flex items-center gap-2">
+    <Utensils className="h-5 w-5 text-primary" />
+    Flight Preferences
+  </h3>
+  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+    {/* Seat Number */}
+    <div className="space-y-1.5">
+      <Label className="text-sm font-medium text-slate-700 mb-1.5">Seat Number</Label>
+      <Input
+        placeholder="e.g., 12A"
+        value={formData.seat_number || ''}
+        onChange={(e) => handleChange('seat_number', e.target.value)}
+        className="h-11 border-slate-200 bg-white focus:ring-2 focus:ring-primary/20 focus:border-primary rounded-lg"
+      />
+    </div>
 
+    {/* Seat Preference */}
+    <div className="space-y-1.5">
+      <Label className="text-sm font-medium text-slate-700 mb-1.5">Seat Preference</Label>
+      <Select 
+        value={formData.seat_preference || ''} 
+        onValueChange={(v) => handleChange('seat_preference', v)}
+      >
+        <SelectTrigger className="h-11 border-slate-200 bg-white">
+          <SelectValue placeholder="Select seat preference" />
+        </SelectTrigger>
+        <SelectContent>
+          <SelectItem value="window">🪟 Window Seat</SelectItem>
+          <SelectItem value="aisle">🚶 Aisle Seat</SelectItem>
+          <SelectItem value="middle">💺 Middle Seat</SelectItem>
+        </SelectContent>
+      </Select>
+    </div>
+
+    {/* Extra Legroom */}
+    <div className="space-y-1.5">
+      <Label className="text-sm font-medium text-slate-700 mb-1.5">Extra Legroom</Label>
+      <Select 
+        value={formData.extra_legroom ? 'yes' : 'no'} 
+        onValueChange={(v) => handleChange('extra_legroom', v === 'yes')}
+      >
+        <SelectTrigger className="h-11 border-slate-200 bg-white">
+          <SelectValue placeholder="Select option" />
+        </SelectTrigger>
+        <SelectContent>
+          <SelectItem value="no">No</SelectItem>
+          <SelectItem value="yes">Yes</SelectItem>
+        </SelectContent>
+      </Select>
+    </div>
+
+    {/* Economy Delight - NEW */}
+    <div className="space-y-1.5">
+      <Label className="text-sm font-medium text-slate-700 mb-1.5">Economy Delight</Label>
+      <Select 
+        value={formData.economy_delight ? 'yes' : 'no'} 
+        onValueChange={(v) => handleChange('economy_delight', v === 'yes')}
+      >
+        <SelectTrigger className="h-11 border-slate-200 bg-white">
+          <SelectValue placeholder="Select option" />
+        </SelectTrigger>
+        <SelectContent>
+          <SelectItem value="no">No</SelectItem>
+          <SelectItem value="yes">Yes</SelectItem>
+        </SelectContent>
+      </Select>
+      <p className="text-[10px] text-slate-400 mt-0.5">
+        Extra legroom, priority boarding & enhanced meal
+      </p>
+    </div>
+
+    {/* Meal Preference */}
+    <div className="space-y-1.5">
+      <Label className="text-sm font-medium text-slate-700 mb-1.5">Meal Preference</Label>
+      <Select 
+        value={formData.meal_preference || ''} 
+        onValueChange={(v) => handleChange('meal_preference', v)}
+      >
+        <SelectTrigger className="h-11 border-slate-200 bg-white">
+          <SelectValue placeholder="Select meal" />
+        </SelectTrigger>
+        <SelectContent>
+          <SelectItem value="regular">Regular</SelectItem>
+          <SelectItem value="vegetarian">Vegetarian</SelectItem>
+          <SelectItem value="vegan">Vegan</SelectItem>
+          <SelectItem value="halal">Halal</SelectItem>
+          <SelectItem value="kosher">Kosher</SelectItem>
+          <SelectItem value="gluten_free">Gluten Free</SelectItem>
+        </SelectContent>
+      </Select>
+    </div>
+
+    {/* Special Assistance */}
+    <div className="md:col-span-2 space-y-1.5">
+      <Label className="text-sm font-medium text-slate-700 mb-1.5">Special Assistance Details</Label>
+      <Textarea
+        placeholder="Describe any special assistance needed..."
+        value={formData.special_assistance || ''}
+        onChange={(e) => handleChange('special_assistance', e.target.value)}
+        className="h-11 border-slate-200 bg-white focus:ring-2 focus:ring-primary/20 focus:border-primary rounded-lg"
+        rows={2}
+      />
+    </div>
+  </div>
+</div>
       {/* Remarks */}
       <div className="bg-white rounded-xl border border-slate-200 shadow-sm p-6">
         <h3 className="text-lg font-semibold text-slate-900 mb-4 flex items-center gap-2">

@@ -328,12 +328,78 @@ function BookingDetailPage() {
             </div>
           )}
 
+            <div className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+  {/* Header with a subtle soft background */}
+  <div className="px-6 py-4 border-b border-slate-200 bg-slate-50/50">
+    <h3 className="font-semibold text-slate-900 flex items-center gap-2">
+      <Luggage className="h-5 w-5 text-indigo-600" /> 
+      Baggage Allowance
+    </h3>
+  </div>
+  
+  {/* Content: Side-by-side grid on larger screens, stacked on mobile */}
+  <div className="p-6 grid grid-cols-1 sm:grid-cols-2 gap-6 divide-y sm:divide-y-0 sm:divide-x divide-slate-100">
+    
+    {/* Checked Baggage Column */}
+    <div className="flex items-center gap-4">
+      {/* Icon visual anchor */}
+      <div className="p-2.5 bg-blue-50 text-blue-600 rounded-lg shrink-0">
+        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+          <path strokeLinecap="round" strokeLinejoin="round" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+        </svg>
+      </div>
+      <div className="flex flex-col">
+        <span className="text-xs font-semibold text-slate-400 uppercase tracking-wider">
+          Checked Baggage
+        </span>
+        <span className="text-sm font-medium text-slate-800 mt-0.5">
+          {/* Interpolated to a string first to prevent 'never' compiler errors */}
+          {`${baggage?.checked_count || 0}`.includes('x')
+            ? `${baggage?.checked_count}`.replace('x', ' x ')
+            : `${baggage?.checked_count || 0} piece(s) (${baggage?.checked_kg || 23}kg each)`
+          }
+        </span>
+      </div>
+    </div>
+
+    {/* Hand Luggage Column */}
+    <div className="flex items-center gap-4 pt-4 sm:pt-0 sm:pl-6">
+      {/* Icon visual anchor */}
+      <div className="p-2.5 bg-indigo-50 text-indigo-600 rounded-lg shrink-0">
+        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+          <path strokeLinecap="round" strokeLinejoin="round" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+        </svg>
+      </div>
+      <div className="flex flex-col">
+        <span className="text-xs font-semibold text-slate-400 uppercase tracking-wider">
+          Hand Luggage
+        </span>
+        <span className="text-sm font-medium text-slate-800 mt-0.5">
+          {/* Interpolated to a string first to prevent 'never' compiler errors */}
+          {`${baggage?.hand_luggage_count || 0}`.includes('x')
+            ? `${baggage?.hand_luggage_count}`.replace('x', ' x ')
+            : `${baggage?.hand_luggage_count || 0} piece(s) (${baggage?.hand_luggage_kg || 7}kg each)`
+          }
+        </span>
+      </div>
+    </div>
+
+  </div>
+</div>
+
           {/* Preferences & Accessibility */}
           <div className="bg-white rounded-xl border border-slate-200 shadow-sm">
             <div className="px-6 py-4 border-b border-slate-200"><h3 className="font-semibold text-slate-900 flex items-center gap-2"><Accessibility className="h-5 w-5 text-primary" /> Preferences & Accessibility</h3></div>
             <div className="p-6">
               <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
                 <InfoField label="Seat Number" value={preferences.seat_number || '—'} />
+                <InfoField label="Seat Preference" value={
+  preferences?.seat_preference === 'window' ? '🪟 Window Seat' :
+  preferences?.seat_preference === 'aisle' ? '🚶 Aisle Seat' :
+  preferences?.seat_preference === 'middle' ? '💺 Middle Seat' : '—'
+} />
+<InfoField label="Extra Legroom" value={preferences?.extra_legroom ? '✅ Yes' : '❌ No'} />
+<InfoField label="Economy Delight" value={preferences?.economy_delight ? '✅ Yes' : '❌ No'} /> {/* NEW */}
                 <InfoField label="Meal Preference" value={preferences.meal_preference ? preferences.meal_preference.replace(/_/g, ' ') : 'Regular'} />
                 <InfoField label="Wheelchair" value={assistance?.wheelchair === 'none' ? 'Not Required' : (assistance?.wheelchair || 'None').replace(/_/g, ' ')} />
                 <InfoField label="Priority Pass" value={assistance?.priority_pass ? '✅ Enabled' : '❌ Not Required'} />
@@ -341,6 +407,10 @@ function BookingDetailPage() {
               </div>
             </div>
           </div>
+
+
+        
+          
 
           {/* Remarks */}
           {remarks && (

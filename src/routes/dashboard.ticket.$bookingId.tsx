@@ -537,8 +537,18 @@ const hasReturnSegments = returnSegments.length > 0;
           <div className="p-5">
             <h3 className="text-[11px] font-bold text-gray-700 uppercase mb-3 flex items-center gap-2"><Luggage className="h-3.5 w-3.5 text-gray-500" /> Baggage</h3>
             <div className="space-y-2 text-[10px]">
-              <div className="flex justify-between"><span className="text-gray-500">Checked:</span><span className="font-semibold">{baggage?.checked_count || 0} pc(s) • 23kg</span></div>
-              <div className="flex justify-between"><span className="text-gray-500">Hand:</span><span className="font-semibold">{baggage?.hand_luggage_count || 0} pc(s) • 7kg</span></div>
+              <div className="flex justify-between">
+  <span className="text-gray-500">Checked:</span>
+  <span className="font-semibold">
+    {baggage?.checked_count || 0}x{baggage?.checked_kg || 23}kg ({((baggage?.checked_count || 0) * (baggage?.checked_kg || 23))}kg total)
+  </span>
+</div>
+<div className="flex justify-between">
+  <span className="text-gray-500">Hand:</span>
+  <span className="font-semibold">
+    {baggage?.hand_luggage_count || 0}x{baggage?.hand_luggage_kg || 7}kg ({((baggage?.hand_luggage_count || 0) * (baggage?.hand_luggage_kg || 7))}kg total)
+  </span>
+</div>
             <p className="text-[9px] text-gray-500 mt-2 leading-relaxed">
                 Max dimensions: 55 × 38 × 22cm for hand luggage. Individual checked items over 32kg cannot be accepted.
               </p>
@@ -546,14 +556,77 @@ const hasReturnSegments = returnSegments.length > 0;
             </div>
           </div>
           <div className="p-5">
-            <h3 className="text-[11px] font-bold text-gray-700 uppercase mb-3 flex items-center gap-2"><Shield className="h-3.5 w-3.5 text-gray-500" /> Preferences</h3>
-            <div className="space-y-2 text-[10px]">
-              <div className="flex justify-between"><span className="text-gray-500">Seat:</span><span className="font-semibold">{preferences?.seat_number || 'TBA'}</span></div>
-              <div className="flex justify-between"><span className="text-gray-500">Meal:</span><span className="font-semibold capitalize">{preferences?.meal_preference ? preferences.meal_preference.replace(/_/g, ' ') : 'Regular'}</span></div>
-              <div className="flex justify-between"><span className="text-gray-500">Wheelchair:</span><span className="font-semibold">{assistance?.wheelchair === 'none' ? 'Not Required' : assistance?.wheelchair?.replace(/_/g, ' ') || 'None'}</span></div>
-              <div className="flex justify-between"><span className="text-gray-500">Priority Pass:</span>{assistance?.priority_pass ? <Badge className="text-[10px] bg-green-600 text-white">Enabled</Badge> : <span className="text-gray-400">—</span>}</div>
-            </div>
-          </div>
+  <h3 className="text-[11px] font-bold text-gray-700 uppercase mb-3 flex items-center gap-2 tracking-wide">
+    <Shield className="h-3.5 w-3.5 text-gray-500" /> Preferences
+  </h3>
+  <div className="space-y-2 text-[10px]">
+    {/* Seat Number */}
+    <div className="flex justify-between">
+      <span className="text-gray-500">Seat Number:</span>
+      <span className="font-semibold">{preferences?.seat_number || 'TBA'}</span>
+    </div>
+    
+    {/* Seat Preference - NEW */}
+    <div className="flex justify-between">
+      <span className="text-gray-500">Seat Preference:</span>
+      <span className="font-semibold">
+        {preferences?.seat_preference === 'window' ? '🪟 Window' :
+         preferences?.seat_preference === 'aisle' ? '🚶 Aisle' :
+         preferences?.seat_preference === 'middle' ? '💺 Middle' : '—'}
+      </span>
+    </div>
+    
+    {/* Extra Legroom - NEW */}
+    <div className="flex justify-between">
+      <span className="text-gray-500">Extra Legroom:</span>
+      <span className="font-semibold">
+        {preferences?.extra_legroom ? (
+          <span className="text-[9px] text-black">✅ Yes</span>
+        ) : (
+          <span className="text-gray-400">— No</span>
+        )}
+      </span>
+    </div>
+
+    {/* Economy Delight - NEW */}
+<div className="flex justify-between">
+  <span className="text-gray-500">Economy Delight:</span>
+  <span className="font-semibold">
+    {preferences?.economy_delight ? (
+      <span className="text-[9px] text-black">✅ Yes</span>
+    ) : (
+      <span className="text-gray-400">— No</span>
+    )}
+  </span>
+</div>
+    
+    {/* Meal */}
+    <div className="flex justify-between">
+      <span className="text-gray-500">Meal:</span>
+      <span className="font-semibold capitalize">
+        {preferences?.meal_preference ? preferences.meal_preference.replace(/_/g, ' ') : 'Regular'}
+      </span>
+    </div>
+    
+    {/* Wheelchair */}
+    <div className="flex justify-between">
+      <span className="text-gray-500">Wheelchair:</span>
+      <span className="font-semibold">
+        {assistance?.wheelchair === 'none' ? 'Not Required' : assistance?.wheelchair?.replace(/_/g, ' ') || 'None'}
+      </span>
+    </div>
+    
+    {/* Priority Pass */}
+    <div className="flex justify-between items-center">
+      <span className="text-gray-500">Priority Pass:</span>
+      {assistance?.priority_pass ? (
+        <Badge className="text-[10px] bg-green-600 text-white">Enabled</Badge>
+      ) : (
+        <span className="text-gray-400">—</span>
+      )}
+    </div>
+  </div>
+</div>
         </div>
 
         {/* ────── IMPORTANT INFORMATION ────── */}

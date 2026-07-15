@@ -70,6 +70,11 @@ function EditBookingPage() {
           meal_preference: b.preferences?.meal_preference || '',
           special_assistance: b.preferences?.special_assistance || '',
           remarks: b.remarks || '',
+    checked_baggage_kg: b.baggage?.checked_kg || 23, // NEW
+    hand_luggage_kg: b.baggage?.hand_luggage_kg || 7, // NEW
+    seat_preference: b.preferences?.seat_preference || '', // NEW
+    extra_legroom: b.preferences?.extra_legroom || false, // NEW
+    economy_delight: b.preferences?.economy_delight || false, // NEW
         });
       }
     } catch (err: any) {
@@ -226,22 +231,86 @@ function EditBookingPage() {
         </Section>
 
         {/* Baggage */}
-        <Section title="Baggage Allowance" icon={<Luggage className="h-5 w-5 text-primary" />}>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <Field label="Checked Baggage">
-              <Select value={formData.checked_baggage_count?.toString()} onValueChange={v => handleChange('checked_baggage_count', parseInt(v))}>
-                <SelectTrigger className={inputClass}><SelectValue /></SelectTrigger>
-                <SelectContent>{[0,1,2,3,4,5].map(n => <SelectItem key={n} value={n.toString()}>{n} pc(s) (23kg each)</SelectItem>)}</SelectContent>
-              </Select>
-            </Field>
-            <Field label="Hand Luggage">
-              <Select value={formData.hand_luggage_count?.toString()} onValueChange={v => handleChange('hand_luggage_count', parseInt(v))}>
-                <SelectTrigger className={inputClass}><SelectValue /></SelectTrigger>
-                <SelectContent>{[0,1,2].map(n => <SelectItem key={n} value={n.toString()}>{n} pc(s) (7kg each)</SelectItem>)}</SelectContent>
-              </Select>
-            </Field>
-          </div>
-        </Section>
+        {/* Baggage */}
+<Section title="Baggage Allowance" icon={<Luggage className="h-5 w-5 text-primary" />}>
+  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+    {/* Checked Baggage */}
+    <div className="space-y-3">
+      <Label className="text-sm font-semibold text-slate-700">Checked Baggage (per passenger)</Label>
+      <div className="grid grid-cols-2 gap-3">
+        <div className="space-y-1.5">
+          <Label className="text-xs text-slate-500">Pieces</Label>
+          <Select 
+            value={formData.checked_baggage_count?.toString() || '0'} 
+            onValueChange={v => handleChange('checked_baggage_count', parseInt(v))}
+          >
+            <SelectTrigger className={inputClass}><SelectValue placeholder="Pieces" /></SelectTrigger>
+            <SelectContent>
+              {[0, 1, 2, 3, 4, 5].map(n => (
+                <SelectItem key={n} value={n.toString()}>{n}x</SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+        <div className="space-y-1.5">
+          <Label className="text-xs text-slate-500">Weight</Label>
+          <Select 
+            value={formData.checked_baggage_kg?.toString() || '23'} 
+            onValueChange={v => handleChange('checked_baggage_kg', parseInt(v))}
+          >
+            <SelectTrigger className={inputClass}><SelectValue placeholder="Weight" /></SelectTrigger>
+            <SelectContent>
+              {[15, 20, 23, 25, 30, 35, 40].map(n => (
+                <SelectItem key={n} value={n.toString()}>{n}kg</SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+      </div>
+      <p className="text-[10px] text-slate-400 font-medium">
+        Total: {formData.checked_baggage_count || 0} × {formData.checked_baggage_kg || 23}kg = {(formData.checked_baggage_count || 0) * (formData.checked_baggage_kg || 23)}kg
+      </p>
+    </div>
+
+    {/* Hand Luggage */}
+    <div className="space-y-3">
+      <Label className="text-sm font-semibold text-slate-700">Hand Luggage (per passenger)</Label>
+      <div className="grid grid-cols-2 gap-3">
+        <div className="space-y-1.5">
+          <Label className="text-xs text-slate-500">Pieces</Label>
+          <Select 
+            value={formData.hand_luggage_count?.toString() || '0'} 
+            onValueChange={v => handleChange('hand_luggage_count', parseInt(v))}
+          >
+            <SelectTrigger className={inputClass}><SelectValue placeholder="Pieces" /></SelectTrigger>
+            <SelectContent>
+              {[0, 1, 2].map(n => (
+                <SelectItem key={n} value={n.toString()}>{n}x</SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+        <div className="space-y-1.5">
+          <Label className="text-xs text-slate-500">Weight</Label>
+          <Select 
+            value={formData.hand_luggage_kg?.toString() || '7'} 
+            onValueChange={v => handleChange('hand_luggage_kg', parseInt(v))}
+          >
+            <SelectTrigger className={inputClass}><SelectValue placeholder="Weight" /></SelectTrigger>
+            <SelectContent>
+              {[5, 7, 8, 10].map(n => (
+                <SelectItem key={n} value={n.toString()}>{n}kg</SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+      </div>
+      <p className="text-[10px] text-slate-400 font-medium">
+        Total: {formData.hand_luggage_count || 0} × {formData.hand_luggage_kg || 7}kg = {(formData.hand_luggage_count || 0) * (formData.hand_luggage_kg || 7)}kg
+      </p>
+    </div>
+  </div>
+</Section>
 
         {/* Accessibility */}
         <Section title="Accessibility & Special Assistance" icon={<Accessibility className="h-5 w-5 text-primary" />}>
@@ -265,17 +334,59 @@ function EditBookingPage() {
 
         {/* Preferences */}
         <Section title="Flight Preferences" icon={<Utensils className="h-5 w-5 text-primary" />}>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <Field label="Seat Number"><Input value={formData.seat_number} onChange={e => handleChange('seat_number', e.target.value)} className={inputClass} /></Field>
-            <Field label="Meal Preference">
-              <Select value={formData.meal_preference} onValueChange={v => handleChange('meal_preference', v)}>
-                <SelectTrigger className={inputClass}><SelectValue placeholder="Select meal" /></SelectTrigger>
-                <SelectContent><SelectItem value="regular">Regular</SelectItem><SelectItem value="vegetarian">Vegetarian</SelectItem><SelectItem value="vegan">Vegan</SelectItem><SelectItem value="halal">Halal</SelectItem><SelectItem value="kosher">Kosher</SelectItem><SelectItem value="gluten_free">Gluten Free</SelectItem></SelectContent>
-              </Select>
-            </Field>
-            <div className="md:col-span-2"><Field label="Special Assistance Details"><Textarea value={formData.special_assistance} onChange={e => handleChange('special_assistance', e.target.value)} className={inputClass} rows={2} /></Field></div>
-          </div>
-        </Section>
+  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+    <Field label="Seat Number">
+      <Input value={formData.seat_number} onChange={e => handleChange('seat_number', e.target.value)} className={inputClass} />
+    </Field>
+    <Field label="Seat Preference">
+      <Select value={formData.seat_preference || ''} onValueChange={v => handleChange('seat_preference', v)}>
+        <SelectTrigger className={inputClass}><SelectValue placeholder="Select seat preference" /></SelectTrigger>
+        <SelectContent>
+          <SelectItem value="window">🪟 Window Seat</SelectItem>
+          <SelectItem value="aisle">🚶 Aisle Seat</SelectItem>
+          <SelectItem value="middle">💺 Middle Seat</SelectItem>
+        </SelectContent>
+      </Select>
+    </Field>
+    <Field label="Extra Legroom">
+      <Select value={formData.extra_legroom ? 'yes' : 'no'} onValueChange={v => handleChange('extra_legroom', v === 'yes')}>
+        <SelectTrigger className={inputClass}><SelectValue /></SelectTrigger>
+        <SelectContent>
+          <SelectItem value="no">No</SelectItem>
+          <SelectItem value="yes">Yes</SelectItem>
+        </SelectContent>
+      </Select>
+    </Field>
+    <Field label="Economy Delight">
+  <Select value={formData.economy_delight ? 'yes' : 'no'} onValueChange={v => handleChange('economy_delight', v === 'yes')}>
+    <SelectTrigger className={inputClass}><SelectValue /></SelectTrigger>
+    <SelectContent>
+      <SelectItem value="no">No</SelectItem>
+      <SelectItem value="yes">Yes</SelectItem>
+    </SelectContent>
+  </Select>
+  <p className="text-[10px] text-slate-400 mt-1">Extra legroom, priority boarding & enhanced meal</p>
+</Field>
+    <Field label="Meal Preference">
+      <Select value={formData.meal_preference} onValueChange={v => handleChange('meal_preference', v)}>
+        <SelectTrigger className={inputClass}><SelectValue placeholder="Select meal" /></SelectTrigger>
+        <SelectContent>
+          <SelectItem value="regular">Regular</SelectItem>
+          <SelectItem value="vegetarian">Vegetarian</SelectItem>
+          <SelectItem value="vegan">Vegan</SelectItem>
+          <SelectItem value="halal">Halal</SelectItem>
+          <SelectItem value="kosher">Kosher</SelectItem>
+          <SelectItem value="gluten_free">Gluten Free</SelectItem>
+        </SelectContent>
+      </Select>
+    </Field>
+    <div className="md:col-span-2">
+      <Field label="Special Assistance Details">
+        <Textarea value={formData.special_assistance} onChange={e => handleChange('special_assistance', e.target.value)} className={inputClass} rows={2} />
+      </Field>
+    </div>
+  </div>
+</Section>
 
         {/* Remarks */}
         <Section title="Remarks" icon={<FileText className="h-5 w-5 text-primary" />}>

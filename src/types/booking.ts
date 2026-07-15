@@ -39,14 +39,18 @@ export interface Booking {
   
   preferences: {
     seat_number: string | null;
+    seat_preference: string | null;
+    extra_legroom: boolean;
+    economy_delight: boolean; // NEW
     meal_preference: string | null;
     special_assistance: string | null;
   };
   
-  baggage?: {
+  baggage: {
     checked_count: number;
+    checked_kg: number; // NEW
     hand_luggage_count: number;
-    checked_weight: number;
+    hand_luggage_kg: number; // NEW
   };
   
   assistance?: {
@@ -140,6 +144,16 @@ export interface CreateBookingFormData {
   booking_id?: string;
   pnr_number?: string;
   eticket_number?: string;
+
+  // Seat preferences - NEW
+  seat_preference?: 'window' | 'aisle' | 'middle' | '';
+  extra_legroom?: boolean;
+  
+  // Baggage weight - NEW
+  checked_baggage_kg?: number;
+  hand_luggage_kg?: number;
+
+  economy_delight?: boolean; // NEW
 }
 
 export interface AdditionalPassenger {
